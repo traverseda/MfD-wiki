@@ -25,7 +25,7 @@ urlpatterns = [
     url(r'^wiki/(.*)/revisions/$', WikiPage.as_view(template_name='wiki/revisions.html'), name='wikiRevisions'),
     url(r'^wiki/(.*)/$', WikiPage.as_view(), name='wiki'),
 
-    url(r'^comments/', include('django_comments.urls')),
+#    url(r'^comments/', include('django_comments.urls')),
 
     url(r'^login/$', auth_views.login, name='login'),
     url(r'^logout/$', auth_views.logout, name='logout'),
