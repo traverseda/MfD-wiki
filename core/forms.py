@@ -9,7 +9,7 @@ User = get_user_model()
 class SignUpForm(UserCreationForm):
     class Meta:
         model = User
-        fields = ('username', 'password1', 'password2', )
+        fields = ('username', 'email','password1', 'password2', )
 
 class WikiForm(ModelForm):
      commit_message = forms.CharField(max_length=300, required=False)

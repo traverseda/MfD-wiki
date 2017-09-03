@@ -1,6 +1,7 @@
 from django.shortcuts import render
 from django.contrib.auth import login, authenticate
 from django.shortcuts import render, redirect
+from django.contrib.auth.decorators import login_required
 from core.forms import SignUpForm, WikiForm
 
 import reversion
@@ -30,12 +31,18 @@ from core.models import Wiki
 class WikiPage(View):
     template_name = "wiki/page.html"
     def get(self, request, pageName):
+        if not request.user.is_authenticated() and self.template_name in ["wiki/edit.html",]:
+            return redirect('/login/?next=%s' % request.path)
         page = get_object_or_404(Wiki, name=pageName)
         versions = Version.objects.get_for_object(page)
         form = WikiForm(instance=page)
         return render(request, self.template_name, {'page':page,'form':form,'versions':versions})
+
     def post(self,request,pageName):
         page = get_object_or_404(Wiki, name=pageName)
+        if not request.user.is_authenticated() and "allow_anon" not in page.tags.names():
+            return HttpResponse('Unauthorized', status=401)
+
         versions = Version.objects.get_for_object(page)
         form = WikiForm(request.POST, instance=page)
         if form.is_valid():

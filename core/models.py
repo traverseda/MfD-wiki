@@ -29,7 +29,7 @@ renderer = mistune.Renderer(escape=True)
 markdown = mistune.Markdown(renderer=renderer)
 
 
-@reversion.register(exclude=('renderedText',),follow=('tags','plan',))
+@reversion.register(exclude=('renderedText',),follow=('tags',))
 class Wiki(models.Model):
     name = models.CharField(max_length=400, unique=True)
     bodyText = models.TextField(default="This page doesn't have any content yet.",blank=True)
@@ -45,14 +45,8 @@ class Wiki(models.Model):
     def __str__(self):
         return self.name
 
-class Plan(Wiki):
-    """
-    Wiki items you can vote on.
-    """
-    pass
-
 class Vote(models.Model):
-    plan = models.ForeignKey(Plan, on_delete=models.CASCADE)
+    plan = models.ForeignKey(Wiki, on_delete=models.CASCADE)
     user = models.ForeignKey(
         settings.AUTH_USER_MODEL,
         on_delete=models.CASCADE)

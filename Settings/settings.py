@@ -29,6 +29,8 @@ DEBUG = True
 
 ALLOWED_HOSTS = ['192.168.2.11','mfd.outsidecontext.solutions']
 
+LOGIN_REDIRECT_URL="/"
+LOGOUT_REDIRECT_URL="/"
 
 # Application definition
 
