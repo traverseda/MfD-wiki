@@ -16,7 +16,7 @@ Including another URLconf
 from django.conf.urls import url, include
 from django.contrib import admin
 from django.views.generic.base import RedirectView
-from core.views import signup, login, WikiPage
+from core.views import signup, login, WikiPage, newWikiPage
 from django.contrib.auth import views as auth_views
 
 urlpatterns = [
@@ -24,6 +24,7 @@ urlpatterns = [
     url(r'^wiki/(.*)/edit/$', WikiPage.as_view(template_name='wiki/edit.html'), name='wikiEdit'),
     url(r'^wiki/(.*)/revisions/$', WikiPage.as_view(template_name='wiki/revisions.html'), name='wikiRevisions'),
     url(r'^wiki/(.*)/$', WikiPage.as_view(), name='wiki'),
+    url(r'^wikiNew/$', newWikiPage, name='wikiNew'),
 
 #    url(r'^comments/', include('django_comments.urls')),
 

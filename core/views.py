@@ -28,21 +28,42 @@ from django.views import View
 from django.shortcuts import get_object_or_404
 from core.models import Wiki
 
+from collections import ChainMap
+
+@login_required
+def newWikiPage(request):
+    rData = ChainMap(request.POST,request.GET) #Accesses post, then failing the get. Didn't this used to be built-in?
+    form = WikiForm(rData)
+    if request.method == "POST" and form.is_valid():
+        with reversion.create_revision():
+            reversion.set_user(request.user)
+            reversion.set_comment(form.cleaned_data['commit_message'])
+            wikiPage = form.save()
+        return redirect('wiki',wikiPage.name)
+    return render(request, "wiki/edit.html", {'form':form})
+
+
 class WikiPage(View):
     template_name = "wiki/page.html"
     def get(self, request, pageName):
-        if not request.user.is_authenticated() and self.template_name in ["wiki/edit.html",]:
-            return redirect('/login/?next=%s' % request.path)
         page = get_object_or_404(Wiki, name=pageName)
+        if self.template_name in ["wiki/edit.html",]:
+            if not self.allowed(request,page):
+                return redirect('/login/?next=%s' % request.path)
         versions = Version.objects.get_for_object(page)
         form = WikiForm(instance=page)
         return render(request, self.template_name, {'page':page,'form':form,'versions':versions})
 
+    def allowed(self,request,page):
+      #Crappy simple acle
+      if not request.user.is_authenticated() and "allow_anon" not in page.tags.names():
+          return False
+      return True
+
     def post(self,request,pageName):
         page = get_object_or_404(Wiki, name=pageName)
-        if not request.user.is_authenticated() and "allow_anon" not in page.tags.names():
+        if not self.allowed(request,page):
             return HttpResponse('Unauthorized', status=401)
-
         versions = Version.objects.get_for_object(page)
         form = WikiForm(request.POST, instance=page)
         if form.is_valid():
