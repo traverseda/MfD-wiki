@@ -1,0 +1,21 @@
+{% extends 'base.html'%}
+
+{% block title %}Revisions: {{page.name}}{% endblock %}
+
+{% block content %}
+<h1>Revision: <a href="{% url 'wiki' page.name %}">{{page.name}}</a></h1>
+  {% for version in versions %}
+    <section>
+      <meta name="rawData" content="{{version.serialized_data}}">
+      <p><b>{{version.field_dict.modified|timesince}} ago</b><br>{{version.field_dict.modified}}</p>
+      <p>
+        Name: {{version.field_dict.name}}<br>
+        User: {{version.revision.user}}<br>
+        Tags: {{version.field_dict.tags.all|join:", "}}<br>
+        Comment: {{version.revision.comment}}
+      </p>
+      {{version.field_dict.bodyText|linebreaks}}
+      <hr>
+    </section>
+  {% endfor %}
+{% endblock %}

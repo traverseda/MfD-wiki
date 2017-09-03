@@ -1,0 +1,37 @@
+{% extends 'base.html' %}
+
+{% block title %}{{page.name}}{% endblock %}
+
+{% block content %}
+<h2>wiki/<a href={{ request.path }}>{{page.name}}</a></h2>
+<nav>
+  <a href="edit/">edit</a> |
+  <a href="revisions/">revisions</a>
+</nav>
+<hr>
+<hr>
+<article>
+{{page.renderedText|safe}}
+</article>
+<hr>
+{% comment %}
+{% load comments %}
+{% if user.is_authenticated %}
+    {% get_comment_form for page as form %}
+    <form action="{% comment_form_target %}" method="POST">
+    {% csrf_token %}
+    {{ form.comment }}
+    {{ form.content_type }}
+    {{ form.object_pk }}
+    {{ form.timestamp }}
+    {{ form.security_hash }}
+    <input type="hidden" name="next" value="{% url 'wiki' page.name %}" />
+    <input type="submit" value="Add comment" id="id_submit" />
+    </form>
+{% else %}
+    <p>Please <a href="{% url 'auth_login' %}">log in</a> to leave a comment.</p>
+{% endif %}
+<hr>
+{% render_comment_list for page %}
+{% endcomment %}
+{% endblock %}

@@ -1,0 +1,16 @@
+{% extends 'base.html'%}
+
+{% block title %}Edit: {{page.name}}{% endblock %}
+
+{% block content %}
+<h1>Edit: <a href="{% url 'wiki' page.name %}">{{page.name}}</a></h1>
+<p>
+  This wiki uses 
+  <a target="_blank" href="https://help.github.com/articles/basic-writing-and-formatting-syntax/">markdown</a> 
+  syntax.
+</p>
+<form method="post">{% csrf_token %}
+  {{form}}<br>
+  <button type="submit">Save changes</button>
+</form>
+{% endblock %}
