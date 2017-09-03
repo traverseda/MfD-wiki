@@ -42,7 +42,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django.contrib.sites',
-    'django_comments',
+#    'django_comments', #We'll do comments later, maybe.
     'reversion',
     'taggit',
     'core',
