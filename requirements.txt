@@ -1,4 +1,5 @@
 django
 django-reversion
 django-taggit
+psycopg2
 mistune

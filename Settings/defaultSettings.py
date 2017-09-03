@@ -27,7 +27,7 @@ SECRET_KEY = '#e^ubp-n*+@3*%+w4u&t*v(2ae48rn39!^kna$@e!(q&-zji+-'
 DEBUG = True
 #DEBUG = False
 
-ALLOWED_HOSTS = ['192.168.2.11','mfd.outsidecontext.solutions']
+ALLOWED_HOSTS = ['192.168.2.11']
 
 LOGIN_REDIRECT_URL="/"
 LOGOUT_REDIRECT_URL="/"
