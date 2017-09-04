@@ -20,8 +20,8 @@
 {#        <a href="/messages/">messages</a> | #}
         <a href="/logout/?next={{request.path|urlencode}}">logout</a> 
       {% else %}
-        <a href="/signup/">signup</a> |
-        <a href="/login/">login</a>
+        <a href="/signup/?{{request.GET.urlencode}}">signup</a> |
+        <a href="/login/?{{request.GET.urlencode}}">login</a>
       {% endif %}
     </nav>
     <hr>
