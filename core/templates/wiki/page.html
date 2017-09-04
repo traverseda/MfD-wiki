@@ -4,6 +4,12 @@
 
 {% block content %}
 <h2>wiki/<a href={{ request.path }}>{{page.name}}</a></h2>
+{% if not "noToc" in page.tags.names %}
+<nav id="ToC">
+<b>Table of contents</b>
+  {{ page.renderedToC|safe }}
+</nav>
+{% endif %}
 <nav>
   <a href="edit/">edit</a> |
   <a href="revisions/">revisions</a>

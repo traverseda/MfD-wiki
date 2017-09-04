@@ -27,28 +27,22 @@ def save_user_profile(sender, instance, **kwargs):
 
 renderer = mistune.Renderer(escape=True)
 markdown = mistune.Markdown(renderer=renderer)
-
+from core.mdRenderer import markdown, toc
 
 @reversion.register(exclude=('renderedText',),follow=('tags',))
 class Wiki(models.Model):
     name = models.CharField(max_length=400, unique=True)
     bodyText = models.TextField(default="This page doesn't have any content yet.",blank=True)
     renderedText = models.TextField(default="",blank=True, editable=False)
+    renderedToC = models.TextField(default="",blank=True, editable=False)
     created = models.DateTimeField(auto_now_add=True)
     modified =  models.DateTimeField(auto_now=True)
     tags = TaggableManager(blank=True)
    
     def save(self, *args, **kwargs):
-#        self.renderedText = bbcode.render_html(self.bodyText)
+        toc.reset_toc()
         self.renderedText = markdown(self.bodyText)
+        self.renderedToC = toc.render_toc(level=3)
         super().save(*args, **kwargs)
     def __str__(self):
         return self.name
-
-class Vote(models.Model):
-    plan = models.ForeignKey(Wiki, on_delete=models.CASCADE)
-    user = models.ForeignKey(
-        settings.AUTH_USER_MODEL,
-        on_delete=models.CASCADE)
-    class Meta:
-        unique_together = ("plan", "user")
