@@ -42,7 +42,10 @@ class Wiki(models.Model):
     def save(self, *args, **kwargs):
         toc.reset_toc()
         self.renderedText = markdown(self.bodyText)
-        self.renderedToC = toc.render_toc(level=3)
+        try:
+            self.renderedToC = toc.render_toc()
+        except:
+            self.renderedToC = ""
         super().save(*args, **kwargs)
     def __str__(self):
         return self.name
